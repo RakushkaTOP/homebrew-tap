@@ -29,4 +29,10 @@ cask "wolfclip" do
     "~/Library/Application Support/WolfClip",
     "~/Library/Preferences/one.wolfteam.wolfclip.plist",
   ]
+
+  caveats <<~EOS
+    WolfClip is ad-hoc signed and not notarized by Apple, so this cask removes
+    the download quarantine after install. Allow Accessibility on first launch
+    so WolfClip can paste for you. The app updates itself from GitHub Releases.
+  EOS
 end
