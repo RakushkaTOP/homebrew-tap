@@ -13,15 +13,14 @@ cask "wolfclip" do
   end
 
   auto_updates true
-  depends_on macos: ">= :sonoma"
+  depends_on macos: :sonoma
 
   app "WolfClip.app"
 
   # Not notarized by Apple (ad-hoc signed), so drop the download quarantine;
   # otherwise Gatekeeper refuses to open the app.
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/WolfClip.app"]
+  postflight_steps do
+    run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{appdir}}/WolfClip.app"]
   end
 
   uninstall quit: "one.wolfteam.wolfclip"
