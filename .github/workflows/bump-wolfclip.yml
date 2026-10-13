@@ -1,0 +1,32 @@
+name: Bump WolfClip
+
+# Keeps Casks/wolfclip.rb on the latest GitHub release of RakushkaTOP/wolfclip.
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update version and checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          release=$(gh api repos/RakushkaTOP/wolfclip/releases/latest)
+          version=$(jq -r '.tag_name | ltrimstr("v")' <<<"$release")
+          digest=$(jq -r '.assets[] | select(.name == "WolfClip-macOS.zip") | .digest' <<<"$release")
+          sha=${digest#sha256:}
+          current=$(sed -nE 's/^  version "(.*)"/\1/p' Casks/wolfclip.rb)
+          if [[ -z "$sha" || "$sha" == "$digest" ]]; then echo "No checksum on the release asset"; exit 1; fi
+          if [[ "$version" == "$current" ]]; then echo "Up to date: $current"; exit 0; fi
+          sed -i -E "s/^  version \".*\"/  version \"$version\"/; s/^  sha256 \".*\"/  sha256 \"$sha\"/" Casks/wolfclip.rb
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "wolfclip $version"
+          git push
