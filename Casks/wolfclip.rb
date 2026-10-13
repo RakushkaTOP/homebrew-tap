@@ -1,6 +1,6 @@
 cask "wolfclip" do
-  version "1.0.1"
-  sha256 "c503e56572d0c8934baa268ed4bd66d1d5eb1e64fa8f5997d1fa213de66f5e9c"
+  version "1.0.0"
+  sha256 "f737f358bffa4f1225e91084331cae3c45104bfb08e2cbf4f814b48997b76318"
 
   url "https://github.com/RakushkaTOP/wolfclip/releases/download/v#{version}/WolfClip-macOS.zip"
   name "WolfClip"
